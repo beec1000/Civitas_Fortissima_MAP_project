@@ -20,7 +20,8 @@ public class CameraController : MonoBehaviour
         Camera.main.orthographic = true;
 
         // Set the initial position and zoom level of the camera (zoomed out, at maxZoom)
-        Camera.main.transform.position = new Vector3(-100f, -400f, -950f);
+        Camera.main.transform.position = new Vector3(-100f, 950f, -900f);  // Starting position
+
         Camera.main.orthographicSize = maxZoom; // Set the zoom level to maxZoom
 
         // Initialize the slider if assigned
@@ -59,7 +60,8 @@ public class CameraController : MonoBehaviour
             Vector3 difference = Camera.main.ScreenToViewportPoint(dragOrigin - Input.mousePosition);
 
             // Calculate the movement and apply the dragging speed
-            Vector3 move = new Vector3(difference.x * dragSpeed, difference.y * dragSpeed, 0); // Lock Z to 0
+            Vector3 move = new Vector3(difference.x * dragSpeed, 0, difference.y * dragSpeed); // Lock Y to 0 and move Z
+
             transform.Translate(move, Space.World);
 
             // Apply fixed boundary for camera movement
@@ -68,12 +70,12 @@ public class CameraController : MonoBehaviour
             // Boundary calculations (Fixed boundary around the camera's position)
             float minX = -boundaryOffset;
             float maxX = boundaryOffset;
-            float minY = -boundaryOffset;
-            float maxY = boundaryOffset;
+            float minZ = -boundaryOffset;  // Z axis will now handle up/down movement
+            float maxZ = boundaryOffset;
 
             // Apply the camera clamping with the fixed boundaries
             cameraPos.x = Mathf.Clamp(cameraPos.x, minX, maxX);
-            cameraPos.y = Mathf.Clamp(cameraPos.y, minY, maxY);
+            cameraPos.z = Mathf.Clamp(cameraPos.z, minZ, maxZ);  // Clamp the Z axis for vertical movement
 
             // Update the camera position
             Camera.main.transform.position = cameraPos;
